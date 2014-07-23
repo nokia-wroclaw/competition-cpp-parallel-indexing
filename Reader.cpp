@@ -1,3 +1,4 @@
+#include <unordered_set>
 #include <cassert>
 #include "Reader.hpp"
 
@@ -14,12 +15,24 @@ Reader::Reader(IndexShPtr const& index, WordsShPtr const& words, unsigned seed):
   assert( th_->joinable() );
 }
 
+
+namespace
+{
+template<typename T>
+bool ensureListIsUnique(T const& t)
+{
+  std::unordered_set<std::string> tmp{ begin(t), end(t) };
+  return tmp.size() == t.size();
+}
+}
+
 void Reader::threadLoop()
 {
   while(not stop_)
   {
     auto const& word  = randomWord();
     const auto  files = index_->filesContainingWord(word);
+    assert( ensureListIsUnique(files) );
     ++reads_;
     hits_ += files.size();
   }
