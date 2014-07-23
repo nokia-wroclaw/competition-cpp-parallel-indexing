@@ -10,6 +10,7 @@ add_executable(benchmark
   benchmark.cpp
   Reader.cpp
   Writer.cpp
+  getRandomWords.cpp
   Impl/MyIndex.cpp
   Impl/buildIndex.cpp
 )
