@@ -15,6 +15,6 @@ add_executable(benchmark
   Impl/buildIndex.cpp
 )
 
-add_executable(files_generator
-  files_generator.cpp
+target_link_libraries(benchmark
+  pthread
 )
