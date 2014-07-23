@@ -42,7 +42,7 @@ auto readWords(Args const&... args)
 {
     return std::make_shared<std::vector<std::string>>( getRandomWords(args...) );
 }
-} // nnamed namespace
+} // unnamed namespace
 
 
 int main(int argc, char** argv)
