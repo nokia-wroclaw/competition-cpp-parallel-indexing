@@ -30,6 +30,13 @@ auto makeReaders(Args... args)
 }
 
 
+template<typename ...Args>
+auto readWords(Args const&... args)
+{
+    return std::make_shared<std::vector<std::string>>( getRandomWords(args...) );
+}
+
+
 int main(int argc, char** argv)
 {
   try
@@ -40,10 +47,10 @@ int main(int argc, char** argv)
       return 1;
     }
 
-    const auto files   = filesList(argc, argv);
-    const auto words   = std::make_shared<std::vector<std::string>>( getRandomWords(files, argc) );
-    IndexShPtr index   = buildIndex();
-    const auto readers = makeReaders(index, words);
+    const auto       files   = filesList(argc, argv);
+    const auto       words   = readWords(files, argc);
+    const IndexShPtr index   = buildIndex();
+    const auto       readers = makeReaders(index, words);
 
     // TODO: add writers
     // TODO: add timeout
