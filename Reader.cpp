@@ -2,9 +2,21 @@
 #include <cassert>
 #include "Reader.hpp"
 
+namespace
+{
+template<typename C>
+auto maxIndex(C const& c)
+{
+  if( not c.empty() )
+    return c.size()-1u;
+  return typename C::size_type{0u};
+}
+}
+
+
 Reader::Reader(IndexShPtr const& index, WordsShPtr const& words, unsigned seed):
   gen_{seed},
-  dist_{0, words->size()},
+  dist_{0, maxIndex(*words)},
   index_{index},
   words_{words},
   stop_{false},
@@ -36,4 +48,12 @@ void Reader::threadLoop()
     ++reads_;
     hits_ += files.size();
   }
+}
+
+
+std::string const& Reader::randomWord()
+{
+  const auto n = dist_(gen_);
+  assert( n < words_->size() );
+  return (*words_)[n];
 }

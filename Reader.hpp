@@ -21,8 +21,7 @@ struct Reader
 
 private:
   void threadLoop();
-
-  std::string const& randomWord() { return (*words_)[ dist_(gen_) ]; }
+  std::string const& randomWord();
 
   std::mt19937                                    gen_;
   std::uniform_int_distribution<Words::size_type> dist_;
