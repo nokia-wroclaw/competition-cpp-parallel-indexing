@@ -19,6 +19,9 @@ void Reader::threadLoop()
 {
   while(not stop_)
   {
-    std::cout << "hello thread\n";
+    auto const& word  = randomWord();
+    const auto  files = index_->filesContainingWord(word);
+    ++reads_;
+    hits_ += files.size();
   }
 }
