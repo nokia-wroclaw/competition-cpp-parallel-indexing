@@ -9,9 +9,10 @@ FilesList MyIndex::filesContainingWord(std::string const& word)
   return {};
 }
 
-void MyIndex::addToIndex(std::string fileName)
+IndexingStatus MyIndex::addToIndex(std::string fileName)
 {
   // TODO
+  return {};
 }
 
 }

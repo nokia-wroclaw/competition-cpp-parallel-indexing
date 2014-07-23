@@ -7,5 +7,6 @@ namespace Impl
 {
 
 using FilesList = std::list<std::string>;
+using IndexingStatus = bool;
 
 }
