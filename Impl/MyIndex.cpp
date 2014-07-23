@@ -16,9 +16,3 @@ IndexingStatus MyIndex::addToIndex(std::string fileName)
 }
 
 }
-
-
-std::unique_ptr<Index> buildIndex()
-{
-  return std::make_unique<Impl::MyIndex>();
-}
