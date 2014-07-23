@@ -17,13 +17,20 @@ Target:
 - high responsiveness (no unnecessary blocking)
 
 Tools:
-- c++ 14 (gcc-4.9; clang-3.4)
+- C++ 14 (gcc-4.9; clang-3.4)
 - large text files available at location: unknown for now
+- full C++14 (ok, ok - C++1y) is at your disposal
+- no external libraries are allowed
 
 Testing:
-2 minutes of pseudo random search and index queries.
+60 seconds of pseudo random search and index queries.
 
 Winning criteria:
 Maximum amount of handled (finished):
 - all queries
 - search operations results
+
+Allowed modifications:
+- everything under Impl/ directory (both creating new files and modifying existing ones).
+- CMakeLists.txt: adding new files, extending compilation and linking flags.
+- Impl/* contains example implementation (terrible performance, but working).
