@@ -1,3 +1,4 @@
+#include <chrono>
 #include <vector>
 #include <iostream>
 #include <typeinfo>
@@ -9,8 +10,13 @@
 #include "buildIndex.hpp"
 #include "getRandomWords.hpp"
 
-constexpr unsigned writersCount = 2;
-constexpr unsigned readersCount = 10;
+
+namespace
+{
+constexpr unsigned         writersCount{2};
+constexpr unsigned         readersCount{10};
+const std::chrono::seconds benchmarkLength{1};
+
 
 auto filesList(int argc, char** argv)
 {
@@ -36,6 +42,7 @@ auto readWords(Args const&... args)
 {
     return std::make_shared<std::vector<std::string>>( getRandomWords(args...) );
 }
+} // nnamed namespace
 
 
 int main(int argc, char** argv)
@@ -48,15 +55,29 @@ int main(int argc, char** argv)
       return 1;
     }
 
-    const auto       files   = filesList(argc, argv);
-    const auto       words   = readWords(files, argc);
-    const IndexShPtr index   = buildIndex();
-    const auto       readers = make<Reader>(readersCount, index, words);
-    const auto       writers = make<Writer>(writersCount, index, files);
+    const auto files   = filesList(argc, argv);
+    const auto words   = readWords(files, argc);
+    const auto index   = IndexShPtr{ buildIndex() };
+    const auto readers = make<Reader>(readersCount, index, words);
+    const auto writers = make<Writer>(writersCount, index, files);
 
-    // TODO: add writers
-    // TODO: add timeout
-    // TODO: add results collecting
+    std::this_thread::sleep_for(benchmarkLength);
+
+    uint64_t indexed{0};
+    for(auto const& w: writers)
+      indexed += w->filesIndexed();
+
+    uint64_t reads{0};
+    uint64_t hits{0};
+    for(auto const& r: readers)
+    {
+      reads += r->readsCount();
+      hits  += r->hitsCount();
+    }
+
+    std::cout << indexed << " files indexed by writers" << std::endl;
+    std::cout << reads   << " queries performed by readers" << std::endl;
+    std::cout << hits    << " files found by readers" << std::endl;
   }
   catch(std::exception const& ex)
   {
