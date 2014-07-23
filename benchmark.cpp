@@ -59,10 +59,10 @@ int main(int argc, char** argv)
     const auto files   = filesList(argc, argv);
     const auto words   = readWords(files, argc);
     const auto index   = IndexShPtr{ buildIndex() };
-    std::cout << "building writers" << std::endl;
-    const auto writers = make<Writer>(writersCount, index, files);
     std::cout << "building readers" << std::endl;
     const auto readers = make<Reader>(readersCount, index, words);
+    std::cout << "building writers" << std::endl;
+    const auto writers = make<Writer>(writersCount, index, files);
 
     std::cout << "benchmarking..." << std::endl;
     std::this_thread::sleep_for(benchmarkLength);
@@ -83,6 +83,13 @@ int main(int argc, char** argv)
     std::cout << "  * " << indexed << " files indexed by writers" << std::endl;
     std::cout << "  * " << reads   << " queries performed by readers" << std::endl;
     std::cout << "  * " << hits    << " files found by readers" << std::endl;
+
+    std::cout << "waiting for all threads to finish..." << std::endl;
+    // following stops are not strictly necessary, but they speed up shutting down
+    for(auto& w: writers)
+      w->stop();
+    for(auto& r: readers)
+      r->stop();
   }
   catch(std::exception const& ex)
   {
