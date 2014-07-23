@@ -4,8 +4,9 @@
 #include <stdexcept>
 
 #include "Index.hpp"
-#include "buildIndex.hpp"
 #include "Reader.hpp"
+#include "Writer.hpp"
+#include "buildIndex.hpp"
 #include "getRandomWords.hpp"
 
 constexpr unsigned writersCount = 2;
@@ -20,13 +21,13 @@ auto filesList(int argc, char** argv)
 }
 
 
-template<typename ...Args>
-auto makeReaders(Args... args)
+template<typename T, typename ...Args>
+auto make(const unsigned count, Args... args)
 {
-  std::vector<ReaderPtr> readers;
-  for(unsigned i=0; i<readersCount; ++i)
-    readers.push_back( std::make_unique<Reader>(args..., i) );
-  return readers;
+  std::vector<std::unique_ptr<T>> c;
+  for(unsigned i=0; i<count; ++i)
+    c.push_back( std::make_unique<T>(args..., i) );
+  return c;
 }
 
 
@@ -50,7 +51,8 @@ int main(int argc, char** argv)
     const auto       files   = filesList(argc, argv);
     const auto       words   = readWords(files, argc);
     const IndexShPtr index   = buildIndex();
-    const auto       readers = makeReaders(index, words);
+    const auto       readers = make<Reader>(readersCount, index, words);
+    const auto       writers = make<Writer>(writersCount, index, files);
 
     // TODO: add writers
     // TODO: add timeout
