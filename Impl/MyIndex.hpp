@@ -5,10 +5,10 @@
 namespace Impl
 {
 
-struct MyIndex: public Index
+struct MyIndex final: public Index
 {
-  virtual FilesList filesContainingWord(std::string const& word);
-  virtual IndexingStatus addToIndex(std::string fileName);
+  virtual FilesList filesContainingWord(std::string const& word) override;
+  virtual IndexingStatus addToIndex(std::string fileName) override;
 };
 
 }
