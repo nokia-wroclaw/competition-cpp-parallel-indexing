@@ -7,6 +7,7 @@ set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} ${common_flags} -g3 -ggdb 
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${common_flags} -s")
 
 add_executable(benchmark
+  readFileAsLines.cpp
   benchmark.cpp
   Reader.cpp
   Writer.cpp

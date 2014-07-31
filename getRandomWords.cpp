@@ -2,6 +2,7 @@
 #include <fstream>
 #include <unordered_set>
 #include "getRandomWords.hpp"
+#include "readFileAsLines.hpp"
 
 namespace
 {
@@ -10,15 +11,10 @@ using WordSet = std::unordered_set<std::string>;
 template<typename PRNG>
 void addRandomWordsFromFile(WordSet& words, std::string const& file, PRNG& prng)
 {
-  std::ifstream infile;
-  infile.open(file);
-  if(not infile.is_open())
-    throw std::runtime_error{"unable to open file: " + file};
-
-  std::string line;
-  while( std::getline(infile, line) )
+  auto newWords = readFileAsLines(file);
+  for(auto const& w: newWords)
     if( prng()==0 )
-      words.insert(line);
+      words.insert(w);
 }
 }
 
