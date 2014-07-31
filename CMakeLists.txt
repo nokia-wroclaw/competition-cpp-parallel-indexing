@@ -19,3 +19,8 @@ add_executable(benchmark
 target_link_libraries(benchmark
   pthread
 )
+
+add_executable(word_list_generator
+  word_list_generator.cpp
+  readFileAsLines.cpp
+)
