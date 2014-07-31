@@ -15,7 +15,7 @@ namespace
 {
 constexpr unsigned         writersCount{2};
 constexpr unsigned         readersCount{10};
-const std::chrono::seconds benchmarkLength{3};
+const std::chrono::seconds benchmarkLength{60};
 
 
 auto filesList(int argc, char** argv)
