@@ -22,13 +22,18 @@ Tools:
 - full C++14 (ok, ok - C++1y) is at your disposal
 - no external libraries are allowed
 
+File format:
+- text files
+- one word per line
+- line endings format is not specified
+
 Testing:
 60 seconds of pseudo random search and index queries.
 
 Winning criteria:
 Maximum amount of handled (finished):
-- all queries
-- search operations results
+- number of performed queries
+- number of matches found
 
 Allowed modifications:
 - everything under Impl/ directory (both creating new files and modifying existing ones).
