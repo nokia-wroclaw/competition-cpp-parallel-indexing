@@ -9,20 +9,19 @@
 #include "Reader.hpp"
 #include "Writer.hpp"
 #include "buildIndex.hpp"
-#include "getRandomWords.hpp"
+#include "readFileAsLines.hpp"
 
 
 namespace
 {
-constexpr unsigned         writersCount{2};
-constexpr unsigned         readersCount{10};
-const std::chrono::seconds benchmarkLength{3};
+constexpr unsigned writersCount{2};
+constexpr unsigned readersCount{10};
 
 
 auto filesList(int argc, char** argv)
 {
   std::vector<std::string> files;
-  for(int i=1; i<argc; ++i)
+  for(int i=3; i<argc; ++i)
     files.emplace_back(argv[i]);
   return files;
 }
@@ -38,10 +37,9 @@ auto make(const unsigned count, Args... args)
 }
 
 
-template<typename ...Args>
-auto readWords(Args const&... args)
+auto readQueryWords(std::string const& queryFile)
 {
-    return std::make_shared<std::vector<std::string>>( getRandomWords(args...) );
+    return std::make_shared<std::vector<std::string>>( readFileAsLines(queryFile) );
 }
 } // unnamed namespace
 
@@ -50,17 +48,18 @@ int main(int argc, char** argv)
 {
   try
   {
-    if(argc<1+1)
+    if(argc<1+3)
     {
-      std::cerr << argv[0] << " <file1> <file2> ... <fileN>" << std::endl;
+      std::cerr << argv[0] << " <query-file> <benchmark-seconds> <in-file-1> <in-file-2> ... <in-file-N>" << std::endl;
       return 1;
     }
 
-    const auto start   = std::make_shared<Event>();
+    const auto benchmarkLength = std::chrono::seconds{ atoi(argv[2]) };
+    const auto start = std::make_shared<Event>();
     std::cout << "preparing random queries sets" << std::endl;
-    const auto files   = filesList(argc, argv);
-    const auto words   = readWords(files, argc);
-    const auto index   = IndexShPtr{ buildIndex() };
+    const auto files = filesList(argc, argv);
+    const auto words = readQueryWords(argv[1]);
+    const auto index = IndexShPtr{ buildIndex() };
     std::cout << "building readers" << std::endl;
     const auto readers = make<Reader>(readersCount, start, index, words);
     std::cout << "building writers" << std::endl;
