@@ -4,6 +4,7 @@
 #include <utility>
 #include <fstream>
 #include <iostream>
+#include <unordered_set>
 #include <cstdlib>
 #include "readFileAsLines.hpp"
 
@@ -12,7 +13,8 @@ using std::cerr;
 using std::endl;
 
 
-constexpr auto numberedWordEveryIteration = 16;
+constexpr auto numberedWordEveryIteration = 23;
+constexpr auto queryEveryIteration        = 13;
 
 
 auto readAllFiles(int argc, char** argv)
@@ -32,7 +34,7 @@ auto readAllFiles(int argc, char** argv)
 
 
 template<typename Dict, typename Prng>
-void generateFile(std::string const& filename, const unsigned wordsCount, Dict const& dict, Prng& prng)
+void generateFile(std::string const& filename, const unsigned wordsCount, Dict const& dict, Prng& prng, std::unordered_set<std::string>& queries)
 {
   cout << "generating file " << filename << "..." << endl;
   std::ofstream os(filename);
@@ -40,10 +42,25 @@ void generateFile(std::string const& filename, const unsigned wordsCount, Dict c
     throw std::runtime_error{"unable to open file for writing: " + filename};
 
   for(unsigned i=0; i<wordsCount; ++i)
-    if( i % numberedWordEveryIteration )
-      os << dict[prng()] << "\n";
-    else
-      os << dict[prng()] << prng() << "\n";
+  {
+    const auto addNumber = (i % numberedWordEveryIteration) == 0;
+    auto       word      = dict[prng()] + ( addNumber ? std::to_string(prng()) : "" );
+    os << word << "\n";
+    if( (i % queryEveryIteration) == 0 )
+      queries.insert( std::move(word) );
+  }
+}
+
+
+void writeQueriesToFile(std::string const& filename, std::unordered_set<std::string> const& queries)
+{
+  cout << "writing queries to file " << filename << "..." << endl;
+  std::ofstream os(filename);
+  if( not os.is_open() )
+    throw std::runtime_error{"unable to open file for writing: " + filename};
+
+  for(auto const& q: queries)
+    os << q << '\n';
 }
 
 
@@ -73,9 +90,12 @@ int main(int argc, char** argv)
     std::uniform_int_distribution<unsigned> dist(0, dictionary.size()-1);
     std::mt19937_64                         gen(seed);
     auto                                    prng = [&]{ return dist(gen); };
+    std::unordered_set<std::string>         queries;
 
     for(int i=0; i<filesCount; ++i)
-      generateFile( "dict_" + std::to_string(i) + ".txt", wordsPerFile, dictionary, prng );
+      generateFile( "dict_" + std::to_string(i) + ".txt", wordsPerFile, dictionary, prng, queries );
+
+    writeQueriesToFile( "queries.txt", queries );
 
     cout << "all done" << endl;
   }
