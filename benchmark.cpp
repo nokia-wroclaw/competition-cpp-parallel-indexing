@@ -85,6 +85,7 @@ int main(int argc, char** argv)
     std::cout << "  * " << indexed << " files indexed by writers" << std::endl;
     std::cout << "  * " << reads   << " queries performed by readers" << std::endl;
     std::cout << "  * " << hits    << " files found by readers" << std::endl;
+    std::cout << "your score is: " << reads + hits << std::endl;
 
     std::cout << "waiting for all threads to finish..." << std::endl;
     // following stops are not strictly necessary, but they speed up shutting down
