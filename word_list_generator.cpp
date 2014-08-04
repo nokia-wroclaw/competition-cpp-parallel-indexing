@@ -14,7 +14,7 @@ using std::endl;
 
 
 constexpr auto numberedWordEveryIteration = 23;
-constexpr auto queryEveryIteration        = 13;
+constexpr auto queryEveryIteration        = 9;
 
 
 auto readAllFiles(int argc, char** argv)
