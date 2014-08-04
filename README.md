@@ -13,7 +13,7 @@ which will handle n searching and m indexing clients.
 
 Target:
 - fast access to collection
-- multithred safety
+- multithread safety
 - high responsiveness (no unnecessary blocking)
 
 Tools:
@@ -31,9 +31,8 @@ Testing:
 60 seconds of pseudo random search and index queries.
 
 Winning criteria:
-Maximum amount of handled (finished):
-- number of performed queries
-- number of matches found
+Sum of number of handled (finished) queries, performed by all clients + total
+number of files found, by queries.
 
 Allowed modifications:
 - everything under Impl/ directory (both creating new files and modifying existing ones).
