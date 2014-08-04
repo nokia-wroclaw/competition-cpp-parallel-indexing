@@ -5,6 +5,7 @@
 #include <memory>
 #include <cinttypes>
 #include "Index.hpp"
+#include "Event.hpp"
 #include "JoiningThread.hpp"
 
 struct Reader
@@ -12,10 +13,14 @@ struct Reader
   using Words      = std::vector<std::string>;
   using WordsShPtr = std::shared_ptr<Words>;
 
-  Reader(IndexShPtr const& index, WordsShPtr const& words, unsigned seed);
+  Reader(EventShPtr const& start, IndexShPtr const& index, WordsShPtr const& words, unsigned seed);
   ~Reader(void) { stop(); }
 
-  void stop() { stop_ = true; }
+  void stop()
+  {
+    stop_ = true;
+    start_->set();
+  }
   uint64_t readsCount() { return reads_; }
   uint64_t hitsCount() { return hits_; }
 
@@ -31,6 +36,7 @@ private:
   std::atomic<bool>     stop_;
   std::atomic<uint64_t> reads_;
   std::atomic<uint64_t> hits_;
+  EventShPtr            start_;
   JoiningThread         th_;
 };
 

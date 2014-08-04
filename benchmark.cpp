@@ -5,6 +5,7 @@
 #include <stdexcept>
 
 #include "Index.hpp"
+#include "Event.hpp"
 #include "Reader.hpp"
 #include "Writer.hpp"
 #include "buildIndex.hpp"
@@ -15,7 +16,7 @@ namespace
 {
 constexpr unsigned         writersCount{2};
 constexpr unsigned         readersCount{10};
-const std::chrono::seconds benchmarkLength{60};
+const std::chrono::seconds benchmarkLength{3};
 
 
 auto filesList(int argc, char** argv)
@@ -55,16 +56,18 @@ int main(int argc, char** argv)
       return 1;
     }
 
+    const auto start   = std::make_shared<Event>();
     std::cout << "preparing random queries sets" << std::endl;
     const auto files   = filesList(argc, argv);
     const auto words   = readWords(files, argc);
     const auto index   = IndexShPtr{ buildIndex() };
     std::cout << "building readers" << std::endl;
-    const auto readers = make<Reader>(readersCount, index, words);
+    const auto readers = make<Reader>(readersCount, start, index, words);
     std::cout << "building writers" << std::endl;
-    const auto writers = make<Writer>(writersCount, index, files);
+    const auto writers = make<Writer>(writersCount, start, index, files);
 
     std::cout << "benchmarking..." << std::endl;
+    start->set();
     std::this_thread::sleep_for(benchmarkLength);
 
     uint64_t indexed{0};

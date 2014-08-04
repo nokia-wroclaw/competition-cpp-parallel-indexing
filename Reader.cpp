@@ -14,7 +14,7 @@ auto maxIndex(C const& c)
 }
 
 
-Reader::Reader(IndexShPtr const& index, WordsShPtr const& words, unsigned seed):
+Reader::Reader(EventShPtr const& start, IndexShPtr const& index, WordsShPtr const& words, unsigned seed):
   gen_{seed},
   dist_{0, maxIndex(*words)},
   index_{index},
@@ -22,6 +22,7 @@ Reader::Reader(IndexShPtr const& index, WordsShPtr const& words, unsigned seed):
   stop_{false},
   reads_{0},
   hits_{0},
+  start_{start},
   th_{&Reader::threadLoop, this}
 {
   assert( th_->joinable() );
@@ -40,6 +41,7 @@ bool ensureListIsUnique(T const& t)
 
 void Reader::threadLoop()
 {
+  start_->wait();
   while(not stop_)
   {
     auto const& word  = randomWord();

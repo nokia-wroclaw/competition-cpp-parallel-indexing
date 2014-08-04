@@ -1,5 +1,6 @@
 #include <random>
 #include <fstream>
+#include <iostream>
 #include <unordered_set>
 #include "getRandomWords.hpp"
 #include "readFileAsLines.hpp"
@@ -25,6 +26,9 @@ std::vector<std::string> getRandomWords(std::vector<std::string> const& files, u
   std::uniform_int_distribution<unsigned> dist{0, 9};
   auto                                    prng = [&]{ return dist(gen); };
   for(auto const& f: files)
+  {
+    std::cout << "  -> adding random words from file " << f << std::endl;
     addRandomWordsFromFile(words, f, prng);
+  }
   return { begin(words), end(words) };
 }

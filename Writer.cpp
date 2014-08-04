@@ -14,17 +14,19 @@ auto shuffleFiles(Writer::FilesList files)
 }
 }
 
-Writer::Writer(IndexShPtr const& index, FilesList files, unsigned seed):
+Writer::Writer(EventShPtr const& start, IndexShPtr const& index, FilesList files, unsigned seed):
   index_{index},
   files_{ shuffleFiles( std::move(files) ) },
   stop_{false},
   indexed_{0},
+  start_{start},
   th_{&Writer::threadLoop, this}
 { }
 
 
 void Writer::threadLoop()
 {
+  start_->wait();
   while( not stop_ && not files_.empty() )
   {
     auto file = randomFile();
