@@ -7,6 +7,9 @@
 namespace Impl
 {
 
+// the single worst implementation, within the known universe. an example
+// that implements given functionality - just does this terrible. do a better
+// job instead! :)
 struct MyIndex final: public Index
 {
   virtual FilesList filesContainingWord(std::string const& word) override;
