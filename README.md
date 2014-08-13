@@ -9,7 +9,7 @@ Task:
 Implementation of collection with simple API:
 - search(word) returns list of files containing provided word
 - index(files_list) - places new files in collection.
-which will handle n searching and m indexing clients.
+- handle n searching and m indexing clients.
 
 Target:
 - fast access to collection
@@ -28,7 +28,8 @@ File format:
 - line endings format is not specified
 
 Testing:
-60 seconds of pseudo random search and index queries.
+- 60 seconds of pseudo random search and index queries.
+- the best result out of 10 runs is taken.
 
 Winning criteria:
 Sum of number of handled (finished) queries, performed by all clients + total
