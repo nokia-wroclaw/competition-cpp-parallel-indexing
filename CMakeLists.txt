@@ -1,5 +1,5 @@
+#set(CMAKE_CXX_COMPILER clang++-3.4)
 project(competition-cpp-parallel-indexing)
-
 
 set(CMAKE_CXX_FLAGS         "-Wall -Werror -I${CMAKE_SOURCE_DIR} -std=c++14")
 set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} -g3 -ggdb -fsanitize=address -pg")
