@@ -5,6 +5,8 @@ Parallel Indexing Cpp Competition
 July 2014
 Kacper Kokoszka, Bartosz Szurgot
 
+Info: README.md has to be viewed in raw version for proper display
+
 Task:
 Implementation of collection with simple API:
 - search(word) returns list of files containing provided word
