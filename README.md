@@ -8,8 +8,8 @@ Kacper Kokoszka, Bartosz Szurgot
 Task:
 Implementation of collection with simple API:
 - search(word) returns list of files containing provided word
-- index(files_list) - places new files in collection.
-- handle n searching and m indexing clients.
+- index(file) - places new file in collection.
+- handle n searching (8 threads) and m (2 threads) indexing clients.
 
 Target:
 - fast access to collection
@@ -18,7 +18,7 @@ Target:
 
 Tools:
 - C++ 14 (gcc-4.9; clang-3.4)
-- large text files available at location: unknown for now
+- large text files available at location: wrlinb29.emea.nsn-net.net -> path: /var/fpwork/comp-cpp-par/
 - full C++14 (ok, ok - C++1y) is at your disposal
 - no external libraries are allowed
 
@@ -39,9 +39,6 @@ Allowed modifications:
 - everything under Impl/ directory (both creating new files and modifying existing ones).
 - CMakeLists.txt: adding new files, extending compilation and linking flags.
 - Impl/* contains example implementation (terrible performance, but working).
-
-Additional info:
-- there are 8 readers and 2 writers threads
 
 How to:
 - run cmake: in build dir 'cmake <path_to_cmakelist.txt> [-G Ninja]' (you can try ninja instead of make)
