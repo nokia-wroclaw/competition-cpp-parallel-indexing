@@ -17,7 +17,7 @@ Target:
 - high responsiveness (no unnecessary blocking)
 
 Tools:
-- C++ 14 (gcc-4.9; clang-3.4)
+- C++ 14 (gcc-4.9; clang-3.4 - available on wrlinb29.emea.nsn-net.net in /opt/ directory, clang-2.8 for now)
 - large text files available at location: wrlinb29.emea.nsn-net.net -> path: /var/fpwork/comp-cpp-par/
 - full C++14 (ok, ok - C++1y) is at your disposal
 - no external libraries are allowed
@@ -28,8 +28,9 @@ File format:
 - line endings format is not specified
 
 Testing:
-- 60 seconds of pseudo random search and index queries.
-- the best result out of 10 runs is taken.
+- 60 seconds of pseudo random search and index queries
+- the best result out of 10 runs is taken
+- testing machine: wrlinb29.emea.nsn-net.net
 
 Winning criteria:
 Sum of number of handled (finished) queries, performed by all clients + total
