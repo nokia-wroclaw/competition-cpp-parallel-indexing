@@ -37,6 +37,7 @@ Testing:
 Winning criteria:
 Sum of number of handled (finished) queries, performed by all clients + total
 number of files found, by queries.
+Important: each solution will be checked manually in order to avoid cheating.
 
 Allowed modifications:
 - everything under Impl/ directory (both creating new files and modifying existing ones).
