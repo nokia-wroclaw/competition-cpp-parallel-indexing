@@ -10,7 +10,8 @@
 
 struct Reader
 {
-  using Words      = std::vector<std::string>;
+  using Word = std::vector<std::string>;
+  using Words = std::vector<Word>;
   using WordsShPtr = std::shared_ptr<Words>;
 
   Reader(EventShPtr const& start, IndexShPtr const& index, WordsShPtr const& words, unsigned seed);
@@ -26,7 +27,7 @@ struct Reader
 
 private:
   void threadLoop();
-  std::string const& randomWord();
+  Word const& randomWord();
 
   std::mt19937                                    gen_;
   std::uniform_int_distribution<Words::size_type> dist_;

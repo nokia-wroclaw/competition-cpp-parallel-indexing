@@ -3,6 +3,8 @@
 #include <iostream>
 #include <typeinfo>
 #include <stdexcept>
+#include <iterator>
+#include <sstream>
 
 #include "Index.hpp"
 #include "Event.hpp"
@@ -39,7 +41,17 @@ auto make(const unsigned count, Args... args)
 
 auto readQueryWords(std::string const& queryFile)
 {
-    return std::make_shared<std::vector<std::string>>( readFileAsLines(queryFile) );
+  std::vector<std::string> lines{readFileAsLines(queryFile)};
+  Reader::Words queries;
+
+  for(auto const& line : lines)
+  {
+    std::istringstream stream{line};
+    Reader::Word word{std::istream_iterator<std::string>(stream), std::istream_iterator<std::string>()};
+    queries.push_back(word);
+  }
+
+  return std::make_shared<Reader::Words>(std::move(queries));
 }
 } // unnamed namespace
 

@@ -17,6 +17,9 @@ constexpr auto numberedWordEveryIteration = 23;
 constexpr auto queryEveryIteration        = 9;
 
 
+using Queries = std::unordered_set<std::string>;
+
+
 auto readAllFiles(int argc, char** argv)
 {
   std::vector<std::string> out;
@@ -34,7 +37,7 @@ auto readAllFiles(int argc, char** argv)
 
 
 template<typename Dict, typename Prng>
-void generateFile(std::string const& filename, const unsigned wordsCount, Dict const& dict, Prng& prng, std::unordered_set<std::string>& queries)
+void generateFile(std::string const& filename, const unsigned wordsCount, Dict const& dict, Prng& prng, Queries& queries)
 {
   cout << "generating file " << filename << "..." << endl;
   std::ofstream os(filename);
@@ -47,20 +50,52 @@ void generateFile(std::string const& filename, const unsigned wordsCount, Dict c
     auto       word      = dict[prng()] + ( addNumber ? std::to_string(prng()) : "" );
     os << word << "\n";
     if( (i % queryEveryIteration) == 0 )
-      queries.insert( std::move(word) );
+      queries.insert(std::move(word));
   }
 }
 
 
-void writeQueriesToFile(std::string const& filename, std::unordered_set<std::string> const& queries)
+using FilesContainer = std::vector<std::unordered_set<std::string>>;
+
+auto openGeneratedFiles(const int filesCount)
+{
+    FilesContainer files;
+    for(int i=0; i<filesCount; ++i)
+    {
+        const std::string name = "dict_" + std::to_string(i) + ".txt";
+        auto words = readFileAsLines(name);
+        files.emplace_back(words.begin(), words.end());
+    }
+
+    return std::move(files);
+}
+
+
+std::string searchWordInGeneratedFiles(FilesContainer const& generatedFiles, std::string const& query)
+{
+    std::string files{""};
+
+    for(unsigned i=0; i<generatedFiles.size(); ++i)
+        if(generatedFiles[i].find(query) != generatedFiles[i].end())
+            files += " dict_" + std::to_string(i) + ".txt";
+
+    return files;
+}
+
+
+void writeQueriesToFile(std::string const& filename, Queries const& queries, int filesCount)
 {
   cout << "writing queries to file " << filename << "..." << endl;
   std::ofstream os(filename);
   if( not os.is_open() )
     throw std::runtime_error{"unable to open file for writing: " + filename};
 
-  for(auto const& q: queries)
-    os << q << '\n';
+  auto generatedFiles = openGeneratedFiles(filesCount);
+
+  for(auto const& query: queries)
+  {
+    os << query << searchWordInGeneratedFiles(generatedFiles, query) << "\n";
+  }
 }
 
 
@@ -90,12 +125,13 @@ int main(int argc, char** argv)
     std::uniform_int_distribution<unsigned> dist(0, dictionary.size()-1);
     std::mt19937_64                         gen(seed);
     auto                                    prng = [&]{ return dist(gen); };
-    std::unordered_set<std::string>         queries;
+
+    Queries queries;
 
     for(int i=0; i<filesCount; ++i)
-      generateFile( "dict_" + std::to_string(i) + ".txt", wordsPerFile, dictionary, prng, queries );
+      generateFile("dict_" + std::to_string(i) + ".txt", wordsPerFile, dictionary, prng, queries);
 
-    writeQueriesToFile( "queries.txt", queries );
+    writeQueriesToFile("queries.txt", queries, filesCount);
 
     cout << "all done" << endl;
   }

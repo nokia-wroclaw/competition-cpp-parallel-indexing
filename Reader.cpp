@@ -1,6 +1,8 @@
 #include <unordered_set>
 #include <cassert>
 #include "Reader.hpp"
+#include <algorithm>
+#include <iostream>
 
 namespace
 {
@@ -31,12 +33,28 @@ Reader::Reader(EventShPtr const& start, IndexShPtr const& index, WordsShPtr cons
 
 namespace
 {
+
 template<typename T>
 bool ensureListIsUnique(T const& t)
 {
   std::unordered_set<std::string> tmp{ begin(t), end(t) };
   return tmp.size() == t.size();
 }
+
+template<typename T>
+bool checkReturnedFiles(T const& t, Reader::Word const& word)
+{
+  for(auto const& file : t)
+  {
+    if(std::find(word.begin(), word.end(), file) == word.end())
+    {
+      std::cout << "word " << word[0] << " was not found in " << file << std::endl;
+      return false;
+    }
+  }
+  return true;
+}
+
 }
 
 void Reader::threadLoop()
@@ -45,15 +63,16 @@ void Reader::threadLoop()
   while(not stop_)
   {
     auto const& word  = randomWord();
-    const auto  files = index_->filesContainingWord(word);
-    assert( ensureListIsUnique(files) );
+    const auto  files = index_->filesContainingWord(word[0]);
+    assert(ensureListIsUnique(files));
+    assert(checkReturnedFiles(files, word));
     ++reads_;
     hits_ += files.size();
   }
 }
 
 
-std::string const& Reader::randomWord()
+Reader::Word const& Reader::randomWord()
 {
   const auto n = dist_(gen_);
   assert( n < words_->size() );
