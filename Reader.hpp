@@ -8,9 +8,12 @@
 #include "Event.hpp"
 #include "JoiningThread.hpp"
 
+
+class Word;
+
+
 struct Reader
 {
-  using Word = std::vector<std::string>;
   using Words = std::vector<Word>;
   using WordsShPtr = std::shared_ptr<Words>;
 

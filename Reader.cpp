@@ -3,6 +3,8 @@
 #include "Reader.hpp"
 #include <algorithm>
 #include <iostream>
+#include <Word.hpp>
+
 
 namespace
 {
@@ -42,13 +44,13 @@ bool ensureListIsUnique(T const& t)
 }
 
 template<typename T>
-bool checkReturnedFiles(T const& t, Reader::Word const& word)
+bool checkReturnedFiles(T const& t, Word const& word)
 {
   for(auto const& file : t)
   {
-    if(std::find(word.begin(), word.end(), file) == word.end())
+    if(std::lower_bound(word.begin(), word.end(), file) == word.end())
     {
-      std::cout << "word " << word[0] << " was not found in " << file << std::endl;
+      std::cout << "word " << word.word() << " was not found in " << file << std::endl;
       return false;
     }
   }
@@ -63,7 +65,7 @@ void Reader::threadLoop()
   while(not stop_)
   {
     auto const& word  = randomWord();
-    const auto  files = index_->filesContainingWord(word[0]);
+    const auto  files = index_->filesContainingWord(word.word());
     assert(ensureListIsUnique(files));
     assert(checkReturnedFiles(files, word));
     ++reads_;
@@ -72,7 +74,7 @@ void Reader::threadLoop()
 }
 
 
-Reader::Word const& Reader::randomWord()
+Word const& Reader::randomWord()
 {
   const auto n = dist_(gen_);
   assert( n < words_->size() );

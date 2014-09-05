@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <iterator>
 #include <sstream>
+#include <algorithm>
 
 #include "Index.hpp"
 #include "Event.hpp"
@@ -12,6 +13,7 @@
 #include "Writer.hpp"
 #include "buildIndex.hpp"
 #include "readFileAsLines.hpp"
+#include "Word.hpp"
 
 
 namespace
@@ -47,8 +49,7 @@ auto readQueryWords(std::string const& queryFile)
   for(auto const& line : lines)
   {
     std::istringstream stream{line};
-    Reader::Word word{std::istream_iterator<std::string>(stream), std::istream_iterator<std::string>()};
-    queries.push_back(word);
+    queries.emplace_back(Word(std::istream_iterator<std::string>(stream), std::istream_iterator<std::string>()));
   }
 
   return std::make_shared<Reader::Words>(std::move(queries));

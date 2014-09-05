@@ -19,6 +19,7 @@ add_executable(benchmark
   benchmark.cpp
   Reader.cpp
   Writer.cpp
+  Word.cpp
   Impl/MyIndex.cpp
   Impl/buildIndex.cpp
 )
