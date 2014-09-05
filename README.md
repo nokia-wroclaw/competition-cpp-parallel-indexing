@@ -10,8 +10,9 @@ Info: README.md has to be viewed in raw version for proper display
 Task:
 Implementation of collection with simple API:
 - search(word) returns list of files containing provided word
-- index(file) - places new file in collection.
-- handle n searching (8 threads) and m (2 threads) indexing clients.
+- index(file) - places new file in collection
+- handle n searching (8 threads) and m (2 threads) indexing clients
+- application has to handle any number of files/words
 
 Target:
 - fast access to collection
@@ -20,7 +21,7 @@ Target:
 
 Tools:
 - C++ 14 (gcc-4.9; clang-3.4 - available on wrlinb29.emea.nsn-net.net in /opt/ directory, clang-2.8 for now)
-- large text files available at location: wrlinb29.emea.nsn-net.net -> path: /var/fpwork/comp-cpp-par/
+- large text files available at location: wrlinb29.emea.nsn-net.net -> path: /var/fpwork/comp-cpp-par/ (approximately 100 M unique words)
 - full C++14 (ok, ok - C++1y) is at your disposal
 - no external libraries are allowed
 
@@ -40,9 +41,10 @@ number of files found, by queries.
 Important: each solution will be checked manually in order to avoid cheating.
 
 Allowed modifications:
-- everything under Impl/ directory (both creating new files and modifying existing ones).
-- CMakeLists.txt: adding new files, extending compilation and linking flags.
-- Impl/* contains example implementation (terrible performance, but working).
+- everything under Impl/ directory (both creating new files and modifying existing ones)
+- CMakeLists.txt: adding new files, extending compilation and linking flags
+- Impl/* contains example implementation (terrible performance, but working)
+- types from types.hpp can be changed (like FilesList)
 
 How to:
 - run cmake: in build dir 'cmake <path_to_cmakelist.txt> [-G Ninja]' (you can try ninja instead of make)
